@@ -27,7 +27,7 @@ function! s:select(chunk)
     let min_region = [getpos('.'), getpos('.')]
     for block in get(b:, 'textobj_anyblock_local_blocks', []) + g:textobj#anyblock#blocks
         let r = s:get_region(a:chunk.block)
-        if s:is_empty_region(r) || s:cursor_is_out_of_region(r)
+        if s:is_empty_region(r)
             continue
         endif
 
@@ -81,21 +81,6 @@ endfunction
 
 function! s:is_empty_region(region)
     return a:region[1][1] < a:region[0][1] || (a:region[0][1] == a:region[1][1] && a:region[1][2] <= a:region[0][2])
-endfunction
-
-
-function! s:cursor_is_out_of_region(region)
-    let [_, line, col, _] = getpos('.')
-
-    if line < a:region[0][1] || (line == a:region[0][1] && col < a:region[0][2])
-        return 1
-    endif
-
-    if line > a:region[1][1] || (line == a:region[1][1] && col > a:region[1][2])
-        return 1
-    endif
-
-    return 0
 endfunction
 
 let &cpo = s:save_cpo
